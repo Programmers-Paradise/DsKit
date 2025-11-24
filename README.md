@@ -1,4 +1,4 @@
-# ✅ DSKit – A Unified Wrapper Library for Data Science & ML Automation
+# ✅ DSKit – A Unified Wrapper Library for Data Science & ML 
 
 **DSKit** is a community-driven, open-source Python library that wraps complex Data Science and ML operations into easy, user-friendly 1-line commands.
 
