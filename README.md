@@ -1,387 +1,489 @@
-# ✅ DSKit – A Unified Wrapper Library for Data Science & ML 
+# 🚀 Ak-dskit - A Unified Wrapper Library for Data Science & ML
 
-**DSKit** is a community-driven, open-source Python library that wraps complex Data Science and ML operations into easy, user-friendly 1-line commands.
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/ak-dskit?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/ak-dskit)
 
-Instead of writing hundreds of lines for cleaning, EDA, plotting, preprocessing, modeling, evaluation, and explainability, DSKit makes everything **simple**, **readable**, **reusable**, and **production-friendly**.
+**Ak-dskit** (import as `dskit`) is a comprehensive, community-driven, open-source Python library that wraps complex Data Science and ML operations into intuitive, user-friendly 1-line commands.
 
-The goal is to bring an **end-to-end Data Science ecosystem** in one place with wrapper-style functions and classes.
+> **📝 Note**: Install using `pip install Ak-dskit`, but import in Python as `from dskit import dskit`
+
+Instead of writing hundreds of lines for cleaning, EDA, plotting, preprocessing, modeling, evaluation, and explainability, dskit makes everything **simple**, **readable**, **reusable**, and **production-ready**.
+
+The goal is to bring a **complete end-to-end Data Science ecosystem** in one place with wrapper-style functions and classes, supporting everything from basic data manipulation to advanced AutoML.
 
 ---
 
-## 🚀 Project Objective
+## 🎯 Project Objective
 
-To create a Python library that lets users perform full Data Science workflows with minimal code:
+To create a Python library that lets users perform complete Data Science workflows with minimal code:
 
 ```python
-from dskit import DSKit
+from dskit import dskit
 
-kit = DSKit(df)
-kit.clean().visualize().train().explain()
+# Complete ML Pipeline in a few lines!
+kit = dskit.load("data.csv")
+kit.comprehensive_eda(target_col="target")  # EDA report
+kit.clean()  # Clean data
+kit.train_test_auto(target="target")  # Split data
+kit.train_advanced("xgboost").auto_tune().evaluate().explain()  # Train, tune, evaluate, explain
 ```
 
-The library should remain:
-- ✅ Simple
-- ✅ Extensible
-- ✅ Modular
-- ✅ Beginner-friendly
-- ✅ Powerful for experts
+The library remains:
+
+- ✅ **Simple**: One-line commands for complex operations
+- ✅ **Comprehensive**: 221 functions covering entire ML pipeline
+- ✅ **Extensible**: Modular design for easy customization
+- ✅ **Beginner-friendly**: Intuitive API with smart defaults
+- ✅ **Expert-ready**: Advanced features and customization options
+- ✅ **Production-ready**: Robust error handling and optimization
+
+---
+
+## 📦 Installation
+
+### From PyPI (Recommended)
+
+```bash
+# Basic installation
+pip install Ak-dskit
+
+# Full installation with all optional dependencies
+pip install Ak-dskit[full]
+
+# Install specific feature sets
+pip install Ak-dskit[visualization]  # Plotly support
+pip install Ak-dskit[nlp]           # NLP utilities
+pip install Ak-dskit[automl]        # AutoML algorithms
+
+# Development installation
+pip install Ak-dskit[dev]
+```
+
+### From Source
+
+```bash
+git clone https://github.com/Programmers-Paradise/DsKit.git
+cd DsKit
+pip install -e .
+```
+
+### Verify Installation
+
+```bash
+# Test the package
+python test_package.py
+
+# Check CLI
+dskit --help
+```
 
 ---
 
 ## 📦 Core Modules
 
-DSKit includes modules for:
+dskit includes comprehensive modules for:
 
-- 📂 Data loading
-- 🧹 Data cleaning
-- 📊 EDA
-- 🔍 Missing value handling
-- 📉 Outlier handling
-- 📈 Visualization & plotting
-- 📐 Statistical utilities
-- ⚙️ Preprocessing
-- 🔧 Feature engineering
-- 🤖 ML modeling
-- 📋 Model evaluation
-- 🧠 Explainability (XAI)
-- 🔤 Optional NLP/CV tools
+### 📁 **Data I/O**
+
+- Multi-format loading (CSV, Excel, JSON, Parquet)
+- Batch folder processing
+- Smart data type detection
+
+### 🧹 **Data Cleaning**
+
+- Auto-detect and fix data types
+- Smart missing value imputation
+- Outlier detection and removal
+- Column name standardization
+- Text preprocessing and NLP utilities
+
+### 📊 **Exploratory Data Analysis**
+
+- Comprehensive EDA reports
+- Data health scoring
+- Interactive visualizations
+- Statistical summaries
+- Correlation analysis
+- Missing data patterns
+
+### 🔧 **Feature Engineering**
+
+- Polynomial and interaction features
+- Date/time feature extraction
+- Binning and discretization
+- Target encoding
+- Dimensionality reduction (PCA)
+- Text feature extraction
+- Sentiment analysis
+
+### 🤖 **Machine Learning**
+
+- 15+ algorithms (including XGBoost, LightGBM, CatBoost)
+- AutoML capabilities
+- Hyperparameter optimization
+- Cross-validation
+- Ensemble methods
+- Imbalanced data handling
+
+### 📈 **Visualization**
+
+- Static plots (matplotlib/seaborn)
+- Interactive plots (plotly)
+- Model performance charts
+- Feature importance plots
+- Advanced correlation heatmaps
+
+### 🧠 **Model Explainability**
+
+- SHAP integration
+- Feature importance analysis
+- Model performance metrics
+- Error analysis
+- Learning curves
+
+### 📐 **Hyperplane Analysis**
+
+- Algorithm-specific hyperplane visualization
+- SVM margins and support vectors
+- Logistic regression probability contours
+- Perceptron misclassification highlighting
+- LDA class centers and projections
+- Linear regression residual analysis
+- Multi-algorithm comparison tools
+
+### 🎯 **AutoML Features**
+
+- Automated preprocessing pipelines
+- Model comparison and selection
+- Hyperparameter tuning (Grid, Random, Bayesian, Optuna)
+- Automated feature selection
+- Pipeline optimization
 
 ---
 
-## 🧩 TASK LIST (Complete & Clear)
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+# Basic installation
+pip install Ak-dskit
+
+# Full installation with all optional dependencies
+pip install Ak-dskit[full]
+
+# Development installation
+git clone https://github.com/Programmers-Paradise/DsKit.git
+cd DsKit
+pip install -e .[dev,full]
+```
+
+### ✅ Verified Working Example
+
+```python
+import pandas as pd
+from dskit import dskit
+
+# 1. Load data
+kit = dskit.load("your_data.csv")
+
+# 2. Basic data exploration
+print(f"Data shape: {kit.df.shape}")
+health_score = kit.data_health_check()
+print(f"Data health score: {health_score}/100")
+
+# 3. Data cleaning
+kit = kit.fix_dtypes().fill_missing(strategy='auto').remove_outliers()
+
+# 4. EDA (generates comprehensive report)
+kit.comprehensive_eda(target_col="your_target_column")
+
+# 5. Feature engineering
+if 'date_column' in kit.df.columns:
+    kit.create_date_features(['date_column'])
+if 'text_column' in kit.df.columns:
+    kit.advanced_text_clean(['text_column'])
+    kit.sentiment_analysis(['text_column'])
+
+# 6. Model training
+X_train, X_test, y_train, y_test = kit.train_test_auto(target="your_target_column")
+kit.train(model_name="random_forest")
+kit.evaluate()
+
+# 7. Model explainability
+kit.explain()  # Generates SHAP explanations
+```
+
+### Basic Usage
+
+```python
+from dskit import dskit
+
+# Load and explore data
+kit = dskit.load("your_data.csv")
+health_score = kit.data_health_check()  # Get data quality score
+kit.comprehensive_eda(target_col="target")  # Full EDA report
+
+# Clean and preprocess
+kit.clean()  # Auto-clean: fix types, handle missing, normalize columns
+# Create features manually
+kit.create_polynomial_features(degree=2)
+kit.create_date_features(["date_column"])
+
+# Train and evaluate models
+kit.train_test_auto(target="your_target")
+kit.compare_models("your_target")  # Compare multiple algorithms
+kit.train_advanced("xgboost").auto_tune()  # Train with hyperparameter tuning
+kit.evaluate().explain()  # Evaluate and generate SHAP explanations
+```
+
+### Advanced Features
+
+```python
+# Advanced text processing
+kit.sentiment_analysis(["text_column"])
+kit.extract_text_features(["text_column"])
+kit.generate_wordcloud("text_column")
+
+# Feature engineering
+kit.create_polynomial_features(degree=3)
+kit.create_date_features(["date_column"])
+kit.apply_pca(variance_threshold=0.95)
+
+# AutoML
+kit.auto_tune(method="optuna", max_evals=100)
+best_models = kit.compare_models("target", task="classification")
+
+# Advanced visualizations
+kit.plot_feature_importance(top_n=20)
+# Learning curves and validation curves are available through model validation module
+# from dskit.model_validation import ModelValidator
+# validator = ModelValidator()
+# validator.learning_curve_analysis(model, X, y)
+
+# Algorithm-specific hyperplane visualization
+dskit.plot_svm_hyperplane(svm_model, X, y)  # SVM with margins
+dskit.plot_logistic_hyperplane(lr_model, X, y)  # Probability contours
+dskit.plot_perceptron_hyperplane(perceptron_model, X, y)  # Misclassified points
+
+# Compare multiple algorithm hyperplanes
+models = {'SVM': svm, 'LR': lr, 'Perceptron': perceptron}
+dskit.compare_algorithm_hyperplanes(models, X, y)
+```
+
+---
+
+## 📚 Complete Feature Documentation
+
+### 🧩 IMPLEMENTED FEATURES (All Tasks Complete)
 
 Each task below is numbered and written in simple language with enough theory so that any contributor — even new ones — can understand exactly what to build.
 
 ---
 
-### **Task 1 — Implement `load()` function**
+## 📖 Examples & Tutorials
 
-**Goal:** Build a function that loads different file formats (CSV, Excel, JSON) into a pandas DataFrame.
+### Complete ML Pipeline Example
 
-**Theory:** Beginners often struggle with loading different file types. This function should automatically detect file type from the extension and load it properly. If the file path is wrong or unreadable, the function should show a clean error message instead of a confusing traceback.
-
-**Expected:**
 ```python
-df = dskit.load("data.csv")
+import pandas as pd
+from dskit import dskit
+
+# 1. Load and explore
+kit = dskit.load("customer_data.csv")
+health_score = kit.data_health_check()  # Returns: 85.3/100
+
+# 2. Comprehensive EDA
+kit.comprehensive_eda(target_col="churn", sample_size=1000)
+kit.generate_profile_report("eda_report.html")  # Automated EDA report
+
+# 3. Advanced text processing (if text columns exist)
+kit.advanced_text_clean(["feedback"])
+kit.sentiment_analysis(["feedback"])
+kit.extract_text_features(["feedback"])
+
+# 4. Feature engineering
+kit.create_date_features(["registration_date"])
+kit.create_polynomial_features(degree=2, interaction_only=True)
+kit.create_binning_features(["age", "income"], n_bins=5)
+
+# 5. Preprocessing
+kit.clean()  # Auto-clean pipeline
+# Handle imbalanced data if needed
+# from dskit.advanced_modeling import handle_imbalanced_data
+# X_balanced, y_balanced = handle_imbalanced_data(X, y, method="smote")
+
+# 6. Model training and optimization
+X_train, X_test, y_train, y_test = kit.train_test_auto("churn")
+comparison = kit.compare_models("churn")  # Compare 10+ algorithms
+kit.train_advanced("xgboost").auto_tune(method="optuna", max_evals=50)
+
+# 7. Evaluation and explainability
+kit.evaluate().explain()  # Comprehensive evaluation + SHAP
+kit.plot_feature_importance()
+kit.cross_validate(cv=5)
+```
+
+### NLP Pipeline Example
+
+```python
+# Text analysis workflow
+kit = dskit.load("reviews.csv")
+kit.text_stats(["review_text"])  # Basic text statistics
+kit.advanced_text_clean(["review_text"], remove_urls=True, expand_contractions=True)
+kit.sentiment_analysis(["review_text"])  # Add sentiment scores
+kit.generate_wordcloud("review_text", max_words=100)
+kit.extract_keywords("review_text", top_n=20)
+```
+
+### Time Series Feature Engineering
+
+```python
+# Date/time feature extraction
+kit.create_date_features(["transaction_date"])
+# Creates: year, month, day, weekday, quarter, is_weekend columns
+
+kit.create_aggregation_features("customer_id", ["amount"], ["mean", "std", "count"])
+# Creates aggregated features grouped by customer
 ```
 
 ---
 
-### **Task 2 — Implement `read_folder()`**
+## 🎯 AutoML Capabilities
 
-**Goal:** Load multiple data files from a folder and combine them into a single DataFrame.
+dskit includes comprehensive AutoML features:
 
-**Theory:** Many datasets come split into multiple files. Users should not manually loop through files. The function should: list files → load each → concatenate. Provide the option to filter by file type.
+- **Automated Preprocessing**: Smart data cleaning and feature engineering
+- **Model Selection**: Automatic algorithm comparison and selection
+- **Hyperparameter Optimization**: Grid, Random, Bayesian, and Optuna-based tuning
+- **Feature Selection**: Univariate, RFE, and embedded methods
+- **Ensemble Methods**: Voting classifiers and advanced ensembles
+- **Performance Optimization**: Cross-validation and learning curve analysis
 
-**Expected:**
+---
+
+## 📊 Supported Algorithms
+
+### Classification & Regression
+
+- **Traditional**: Random Forest, Gradient Boosting, SVM, KNN, Naive Bayes
+- **Advanced**: XGBoost, LightGBM, CatBoost, Neural Networks
+- **Ensemble**: Voting Classifiers, Stacking, Bagging
+
+### Preprocessing
+
+- **Scaling**: Standard, MinMax, Robust, Quantile
+- **Encoding**: Label, One-Hot, Target, Binary
+- **Imputation**: Mean, Median, Mode, KNN, Iterative
+- **Feature Selection**: SelectKBest, RFE, RFECV, Embedded
+
+---
+
+## 🔧 Configuration
+
+dskit supports flexible configuration:
+
 ```python
-df = dskit.read_folder("datasets/")
+# Global configuration
+from dskit.config import set_config
+set_config({
+    'visualization_backend': 'plotly',  # or 'matplotlib'
+    'auto_save_plots': True,
+    'default_test_size': 0.2,
+    'random_state': 42,
+    'n_jobs': -1
+})
+
+# Method-specific parameters
+kit.auto_tune(method="optuna", max_evals=100, timeout=3600)
+kit.comprehensive_eda(sample_size=5000, include_correlations=True)
 ```
 
 ---
 
-### **Task 3 — Implement `fix_dtypes()`**
+## 🔧 Troubleshooting Common Issues
 
-**Goal:** Auto-detect correct column types (numeric, categorical, datetime) and convert them.
+### Import Errors
 
-**Theory:** Data often comes with wrong types (e.g., numbers stored as text). This function should detect patterns (like digits) and convert columns accordingly. It should also convert date-like strings into datetime.
-
-**Expected:**
 ```python
-df = dskit.fix_dtypes(df)
+# ❌ This might fail with import errors
+from dskit import non_existent_function
+
+# ✅ Import correctly
+from dskit import dskit, load, fix_dtypes, quick_eda
+```
+
+### Method Chaining
+
+```python
+# ❌ Some methods don't return self
+result = kit.missing_summary().fill_missing()  # Error!
+
+# ✅ Correct approach
+missing_info = kit.missing_summary()  # Returns DataFrame
+kit = kit.fill_missing()  # Returns dskit object
+```
+
+### Data Loading
+
+```python
+# ❌ File not found
+kit = dskit.load("non_existent_file.csv")
+
+# ✅ Check file exists first
+import os
+if os.path.exists("data.csv"):
+    kit = dskit.load("data.csv")
+else:
+    print("File not found!")
+```
+
+### Target Column Issues
+
+```python
+# ❌ Target column doesn't exist
+kit.train_test_auto(target="non_existent_column")
+
+# ✅ Check columns first
+print("Available columns:", kit.df.columns.tolist())
+if "target" in kit.df.columns:
+    X_train, X_test, y_train, y_test = kit.train_test_auto(target="target")
 ```
 
 ---
 
-### **Task 4 — Implement `rename_columns_auto()`**
+## 🤝 Contributing
 
-**Goal:** Clean column names so they're analysis-friendly.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-**Theory:** Raw datasets may have spaces, special characters, uppercase letters, etc. The function should convert them to lowercase, replace spaces with underscores, and remove problematic characters.
+### Development Setup
 
-**Expected:**
-```python
-df = dskit.rename_columns_auto(df)
+```bash
+git clone https://github.com/Programmers-Paradise/DsKit.git
+cd DsKit
+pip install -e .[dev,full]
+pre-commit install
+```
+
+### Running Tests
+
+```bash
+pytest tests/ --cov=dskit --cov-report=html  # If tests directory exists
 ```
 
 ---
-
-### **Task 5 — Implement `replace_specials()`**
-
-**Goal:** Remove or replace unwanted special characters from text columns.
-
-**Theory:** Text fields may contain symbols like @, #, %, $ that interfere with processing. The function should let users choose whether to remove or replace them, and should not modify numeric fields.
-
-**Expected:**
-```python
-df = dskit.replace_specials(df)
-```
-
----
-
-### **Task 6 — Implement `missing_summary()`**
-
-**Goal:** Provide a table that shows how many missing values each column has.
-
-**Theory:** Missing data is critical to understand before cleaning. The function should show both the count and percentage of missing values. Optional sorting should be available.
-
-**Expected:**
-```python
-dskit.missing_summary(df)
-```
-
----
-
-### **Task 7 — Implement `plot_missingness()`**
-
-**Goal:** Visualize missing data patterns in a dataset.
-
-**Theory:** Heatmaps and bar charts help identify systematic missingness. The visualization should clearly show where data is missing and which columns are most affected.
-
-**Expected:**
-```python
-dskit.plot_missingness(df)
-```
-
----
-
-### **Task 8 — Implement `fill_missing()`**
-
-**Goal:** Provide simple missing value handling with strategies like mean, median, mode, and forward fill.
-
-**Theory:** Imputation is a common preprocessing step. This function should automatically decide whether to use numeric or categorical strategies based on column type.
-
-**Expected:**
-```python
-df = dskit.fill_missing(df, strategy="mean")
-```
-
----
-
-### **Task 9 — Implement `outlier_summary()`**
-
-**Goal:** Detect outliers in numeric columns using IQR or Z-score.
-
-**Theory:** Outliers can bias models. This function should calculate outliers per column and return a summary table indicating how many extreme values exist.
-
-**Expected:**
-```python
-dskit.outlier_summary(df)
-```
-
----
-
-### **Task 10 — Implement `remove_outliers()`**
-
-**Goal:** Remove rows containing extreme values based on statistical rules.
-
-**Theory:** After detecting outliers, users may want to remove them. Use rules like IQR or Z-score thresholds to identify which rows to drop.
-
-**Expected:**
-```python
-df = dskit.remove_outliers(df)
-```
-
----
-
-### **Task 11 — Implement `plot_histograms()`**
-
-**Goal:** Automatically generate histograms for all numeric features.
-
-**Theory:** Histograms help understand data distribution. The function should loop through numeric columns and plot each histogram clearly with labels and titles.
-
-**Expected:**
-```python
-dskit.plot_histograms(df)
-```
-
----
-
-### **Task 12 — Implement `plot_boxplots()`**
-
-**Goal:** Create boxplots for numeric columns to show spread and outliers.
-
-**Theory:** Boxplots visually highlight skewness and outliers. The function should generate boxplots for each numeric column in a structured layout.
-
-**Expected:**
-```python
-dskit.plot_boxplots(df)
-```
-
----
-
-### **Task 13 — Implement `plot_correlation_heatmap()`**
-
-**Goal:** Show correlation between numeric variables.
-
-**Theory:** Correlation helps understand relationships in data. The heatmap should include labels, a colorbar, and an option to hide the upper triangle.
-
-**Expected:**
-```python
-dskit.plot_correlation_heatmap(df)
-```
-
----
-
-### **Task 14 — Implement `plot_pairplot()`**
-
-**Goal:** Generate a pairplot for multi-feature relationships.
-
-**Theory:** Pairplots visually show pairwise relationships between features and are essential for understanding interactions.
-
-**Expected:**
-```python
-dskit.plot_pairplot(df)
-```
-
----
-
-### **Task 15 — Implement `basic_stats()`**
-
-**Goal:** Create a summary of essential statistics.
-
-**Theory:** Provide count, mean, median, mode, std deviation, variance, min, max, IQR, etc. This helps users quickly understand dataset characteristics.
-
-**Expected:**
-```python
-dskit.basic_stats(df)
-```
-
----
-
-### **Task 16 — Implement `auto_encode()`**
-
-**Goal:** Automatically encode categorical variables.
-
-**Theory:** ML models require numeric data. The function should detect categorical columns and choose label-encoding or one-hot encoding depending on the number of unique categories.
-
-**Expected:**
-```python
-df = dskit.auto_encode(df)
-```
-
----
-
-### **Task 17 — Implement `auto_scale()`**
-
-**Goal:** Automatically scale numeric data using StandardScaler or MinMaxScaler.
-
-**Theory:** Scaling helps models like SVM, KNN, and Logistic Regression work better. Detect numeric columns and apply scaling only where needed.
-
-**Expected:**
-```python
-df = dskit.auto_scale(df)
-```
-
----
-
-### **Task 18 — Implement `train_test_auto()`**
-
-**Goal:** Automatically split data into training and testing sets.
-
-**Theory:** Many users struggle with selecting correct columns. The function should detect the target feature automatically (if specified) and return split data.
-
-**Expected:**
-```python
-X_train, X_test, y_train, y_test = dskit.train_test_auto(df, target="label")
-```
-
----
-
-### **Task 19 — Implement `QuickModel` class**
-
-**Goal:** Create a class that trains ML models with simple commands.
-
-**Theory:** Model training should be easy. Users should specify the model name, and the class should handle initialization, training, prediction, and evaluation.
-
-**Expected:**
-```python
-model = QuickModel("random_forest").fit(X, y)
-```
-
----
-
-### **Task 20 — Implement `compare_models()`**
-
-**Goal:** Train multiple ML models and compare their performance.
-
-**Theory:** Model selection is difficult for beginners. This function should train a set of common models and generate a performance leaderboard.
-
-**Expected:**
-```python
-dskit.compare_models(X, y)
-```
-
----
-
-### **Task 21 — Implement `auto_hpo()`**
-
-**Goal:** Perform automatic hyperparameter tuning.
-
-**Theory:** Hyperparameter tuning improves model performance but is often complex. Support grid search and random search with clean output.
-
-**Expected:**
-```python
-best_model = dskit.auto_hpo(model, param_grid)
-```
-
----
-
-### **Task 22 — Implement `evaluate_model()`**
-
-**Goal:** Provide evaluation metrics for a trained model.
-
-**Theory:** Include accuracy, precision, recall, F1, ROC-AUC for classification and RMSE, MAE, R² for regression.
-
-**Expected:**
-```python
-dskit.evaluate_model(model, X_test, y_test)
-```
-
----
-
-### **Task 23 — Implement `error_analysis()`**
-
-**Goal:** Analyze wrong predictions and show diagnostic insights.
-
-**Theory:** Helps understand model weaknesses by identifying misclassified points or high-error points.
-
-**Expected:**
-```python
-dskit.error_analysis(model, X_test, y_test)
-```
-
----
-
-### **Task 24 — Implement `explain_shap()`**
-
-**Goal:** Provide SHAP-based explainability for ML models.
-
-**Theory:** SHAP shows feature contributions. This function should compute SHAP values and generate summary/force plots.
-
-**Expected:**
-```python
-dskit.explain_shap(model, X)
-```
-
----
-
-### **Task 25 — Implement `quick_eda()`**
-
-**Goal:** Generate a complete EDA report with one function.
-
-**Theory:** Should include missingness, statistics, outliers, correlations, and plots in a structured format.
-
-**Expected:**
-```python
-dskit.quick_eda(df)
-```
-
----
-
-
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+---
+
+## Acknowledgments
+
+- Built on top of excellent libraries: pandas, scikit-learn, matplotlib, seaborn, plotly
+- Inspired by the need for simplified data science workflows
+- Community-driven development with contributions from data scientists worldwide
+
+---
+
+**Ak-dskit (dskit) - Making Data Science Simple, Comprehensive, and Accessible! 🚀**

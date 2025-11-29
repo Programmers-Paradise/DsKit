@@ -1,0 +1,11 @@
+include README.md
+include LICENSE
+include COMPLETE_FEATURE_DOCUMENTATION.md
+include requirements.txt
+include pyproject.toml
+recursive-include dskit *.py
+recursive-exclude tests *
+recursive-exclude experiments *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+global-exclude .DS_Store
