@@ -467,7 +467,6 @@ For comprehensive guides, implementation details, and technical documentation, v
 
 - **[Feature Engineering Implementation Guide](docs/FEATURE_ENGINEERING_IMPLEMENTATION_GUIDE.md)** - Deep dive into how dskit creates features and backend implementation
 - **[Complete ML Pipeline Comparison](docs/COMPLETE_ML_PIPELINE_COMPARISON.md)** - Traditional vs Dskit approaches with 61% code reduction analysis
-- **[Executive Summary](docs/EXECUTIVE_SUMMARY.md)** - High-level overview and benefits
 - **[API Reference](docs/API_REFERENCE.md)** - Complete API documentation
 - **[Quick Test Summary](docs/QUICK_TEST_SUMMARY.md)** - Getting started guide
 
