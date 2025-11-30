@@ -8,7 +8,7 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 
 setup(
     name="Ak-dskit",
-    version="1.0.4",
+    version="1.0.5",
     author="Aksh Agrawal",
     author_email="akshagr10@gmail.com",
     description="A comprehensive data science toolkit with 221+ functions for ML workflows",

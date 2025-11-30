@@ -5,13 +5,26 @@ except ImportError:
 import matplotlib.pyplot as plt
 import pandas as pd
 
-def explain_shap(model, X):
+def explain_shap(model, X, feature_names=None):
     """
     Provides SHAP-based explainability for ML models.
+    
+    Parameters:
+    -----------
+    model : trained model
+        The model to explain
+    X : array-like or DataFrame
+        Data to explain
+    feature_names : list, optional
+        List of feature names (used if X is not a DataFrame)
     """
     if shap is None:
         print("SHAP library not installed. Please install it using 'pip install shap'")
         return
+
+    # Convert to DataFrame if feature_names provided
+    if feature_names is not None and not isinstance(X, pd.DataFrame):
+        X = pd.DataFrame(X, columns=feature_names)
 
     # SHAP explainer depends on the model type
     try:
