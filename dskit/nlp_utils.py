@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from typing import Literal
 try:
     import nltk
     from nltk import WordNetLemmatizer
@@ -255,3 +256,30 @@ def detect_language(df, text_col):
     
     df[f'{text_col}_language'] = languages
     return df
+
+
+def generate_vocabulary(df:pd.DataFrame,text_col:str,case:Literal['lower','upper']=None):
+    """
+    returns a list of vocabulary made from a column of dataframe
+    
+    :param df: dataframe
+    :type df: pd.DataFrame
+    :param text_col: name of the text column
+    :type text_col: str
+    :param case: case of text. If not provided then words remains unchanged
+    :type case: Literal['lower', 'upper']
+    """
+    if text_col not in df.columns:
+        print(f"Column '{text_col}' not found.")
+        return []
+    vocabulary = set()
+    for text in df[text_col].astype(str):
+        if case=='lower':
+            text=text.lower()
+        elif case=='upper':
+            text==text.upper()
+        text = text.split()
+        for t in text:
+            vocabulary.add(t)
+    return list(vocabulary)
+

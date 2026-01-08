@@ -73,6 +73,8 @@ class dskit:
     def generate_wordcloud(self, text_col, max_words=100):
         nlp_utils.generate_wordcloud(self.df, text_col, max_words)
         return self
+    def generate_vocabulary(self,text_col:str,case:Literal['lower','upper']=None):
+        return nlp_utils.generate_vocabulary(self.df,text_col,case)
 
     def clean(self):
         """
