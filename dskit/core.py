@@ -1,7 +1,7 @@
 import pandas as pd
 from . import io, cleaning, visualization, preprocessing, modeling, explainability, eda
 from . import feature_engineering, nlp_utils, advanced_visualization, advanced_modeling, auto_ml, comprehensive_eda
-
+from typing import Literal
 class dskit:
     def __init__(self, df=None):
         self.df = df
@@ -17,8 +17,8 @@ class dskit:
         return dskit(io.load(filepath))
 
     @staticmethod
-    def read_folder(folder_path, file_type='csv'):
-        return dskit(io.read_folder(folder_path, file_type))
+    def read_folder(folder_path:str, file_type:Literal['csv','xls','xlsx','json','parquet']='csv',dynamic:bool=False,display_ignored:bool=False):
+        return dskit(io.read_folder(folder_path, file_type,dynamic,display_ignored))
     
     def save(self, filepath, **kwargs):
         io.save(self.df, filepath, **kwargs)
