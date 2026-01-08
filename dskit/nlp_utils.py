@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 try:
     import nltk
+    from nltk import WordNetLemmatizer
+    from nltk.corpus import stopwords
     from textblob import TextBlob
     from wordcloud import WordCloud
 except ImportError:
@@ -37,7 +39,7 @@ def basic_text_stats(df, text_cols=None):
     return pd.DataFrame(stats).T
 
 def advanced_text_clean(df, text_cols=None, remove_urls=True, remove_emails=True, 
-                       remove_numbers=False, expand_contractions=True):
+                       remove_numbers=False, expand_contractions=True, auto_smart_cleaning:bool=False,language:str='english'):
     """
     Advanced text cleaning with more options.
     """
@@ -73,7 +75,29 @@ def advanced_text_clean(df, text_cols=None, remove_urls=True, remove_emails=True
             }
             for contraction, expansion in contractions.items():
                 text_series = text_series.str.replace(contraction, expansion, case=False)
-        
+        if auto_smart_cleaning: # applies nltk for removing common words and uses word lemmatization
+            try:
+                nltk.download('stopwords') # download stopwords
+                nltk.download('punkt_tab') # download punkt
+                nltk.download('wordnet') # download wordnet
+                all_stopwords = stopwords.words(language) # load stopwords
+                for remove_stop in ['no', 'not', 'off']: # removing from stopwords
+                    all_stopwords.remove(remove_stop)
+                lemmatizer = WordNetLemmatizer() #lamitizer
+                
+                # Function to lemmatize and remove stopwords
+                def lemmatize_text(text):
+                    from nltk.tokenize import word_tokenize
+                    words = word_tokenize(text.lower())  # Lowercase for better lemmatization
+                    lemmatized_words = [lemmatizer.lemmatize(word) for word in words if word not in all_stopwords]
+                    return ' '.join(lemmatized_words)
+                
+                # Apply lemmatization to the text series
+                text_series = text_series.apply(lemmatize_text)
+                
+            except Exception as e:
+                print(f"Advanced cleaning failed: {e}")
+                pass
         # Remove extra whitespace
         text_series = text_series.str.replace(r'\s+', ' ', regex=True).str.strip()
         

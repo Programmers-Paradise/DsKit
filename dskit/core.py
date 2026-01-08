@@ -55,8 +55,8 @@ class dskit:
         self.df = cleaning.simple_nlp_clean(self.df, text_cols)
         return self
     
-    def advanced_text_clean(self, text_cols=None, remove_urls=True, remove_emails=True, remove_numbers=False, expand_contractions=True):
-        self.df = nlp_utils.advanced_text_clean(self.df, text_cols, remove_urls, remove_emails, remove_numbers, expand_contractions)
+    def advanced_text_clean(self, text_cols=None, remove_urls=True, remove_emails=True, remove_numbers=False, expand_contractions=True,auto_smart_cleaning:bool=False,language:str='english'):
+        self.df = nlp_utils.advanced_text_clean(self.df, text_cols, remove_urls, remove_emails, remove_numbers, expand_contractions, auto_smart_cleaning,language)
         return self
     
     def extract_text_features(self, text_cols=None):
