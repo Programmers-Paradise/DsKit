@@ -27,25 +27,49 @@ def load(filepath):
         print(f"Error loading file: {e}")
         return None
 
-def read_folder(folder_path, file_type='csv'):
+def read_folder(folder_path:str, file_type:str='csv',dynamic:bool=False,display_ignored:bool=False):
     """
-    Loads multiple files from a folder and concatenates them.
+    Load and concatenate tabular files from a folder.
+    Parameters
+    ----------
+    folder_path : str
+        Path to the directory containing the files to be loaded.
+
+    file_type : str, default='csv'
+        File extension to filter files when `dynamic=False`.
+        Example: 'csv', 'xlsx', 'parquet'.
+
+    dynamic : bool, default=False
+        If True, loads all files regardless of extension.
+        If False, only files matching `file_type` are loaded.
+
+    display_ignored : bool, default=False
+        If True, prints the list of files that were skipped
+        because they could not be loaded by the `load()` function.
     """
     if not os.path.exists(folder_path):
         raise FileNotFoundError(f"The folder '{folder_path}' was not found.")
-
-    all_files = glob.glob(os.path.join(folder_path, f"*.{file_type}"))
-    
-    if not all_files:
-        print(f"No files found with extension .{file_type} in {folder_path}")
-        return None
+    if dynamic:
+        all_files = glob.glob(os.path.join(folder_path, "*.*"))
+        if not all_files:
+            print(f"No files found!")
+            return None
+    else:
+        all_files = glob.glob(os.path.join(folder_path, f"*.{file_type}"))
+        if not all_files:
+            print(f"No files found with extension .{file_type} in {folder_path}")
+            return None
 
     df_list = []
+    ignored=[]
     for filename in all_files:
         df = load(filename)
         if df is not None:
             df_list.append(df)
-
+        else:
+            ignored.append(filename)
+    if display_ignored:
+        print("Ignored Files : ","\n".join(ignored))
     if df_list:
         return pd.concat(df_list, ignore_index=True)
     else:
