@@ -37,7 +37,7 @@ Welcome to the comprehensive documentation for Ak-dskit - an intelligent machine
 ### 📦 Publishing & Distribution
 - **[PUBLISHING_GUIDE.md](PUBLISHING_GUIDE.md)** - Guide for package publishing and distribution
 - **[READY_TO_PUBLISH.md](READY_TO_PUBLISH.md)** - Publication readiness checklist
-- **[WOC_5.0_APPLICATION.md](WOC_5.0_APPLICATION.md)** - WOC 5.0 application details
+- **[WOC_CONTRIBUTION_GUIDE.md](WOC_CONTRIBUTION_GUIDE.md)** – Winter of Code (WOC) contribution guide and onboarding for first-time contributors
 
 ### 📖 Navigation & Organization
 - **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Alternative documentation index and structure
