@@ -29,8 +29,8 @@ def load(filepath):
 
 def read_folder(folder_path, file_type='csv'):
     """
-    Load multiple files from a folder and returns 
-    a list of pandas Dataframe.
+    Load multiple files from a folder and return 
+    a list of pandas DataFrames.
     """
     if not os.path.exists(folder_path):
         raise FileNotFoundError(f"The folder '{folder_path}' was not found.")
