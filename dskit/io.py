@@ -29,7 +29,8 @@ def load(filepath):
 
 def read_folder(folder_path, file_type='csv'):
     """
-    Loads multiple files from a folder and concatenates them.
+    Load multiple files from a folder and returns 
+    a list of pandas Dataframe.
     """
     if not os.path.exists(folder_path):
         raise FileNotFoundError(f"The folder '{folder_path}' was not found.")
@@ -47,7 +48,7 @@ def read_folder(folder_path, file_type='csv'):
             df_list.append(df)
 
     if df_list:
-        return pd.concat(df_list, ignore_index=True)
+        return df_list
     else:
         return None
 
