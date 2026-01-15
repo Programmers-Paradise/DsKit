@@ -20,6 +20,7 @@ from .model_validation import *
 from .data_auditing import *
 from .database_utils import *
 from .model_deployment import *
+from .imbalance import *
 
 # Hyperplane utilities
 from .hyperplane import *
