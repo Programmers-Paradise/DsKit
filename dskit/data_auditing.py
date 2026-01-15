@@ -452,3 +452,183 @@ def create_synthetic_data(df, n_samples=1000, method='gaussian_copula'):
     else:
         print(f"Method '{method}' not implemented")
         return None
+
+
+def validate_schema(df, expected_dtypes=None, required_columns=None):
+    """
+    Validate DataFrame schema against expected dtypes and required columns.
+    
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The DataFrame to validate.
+    expected_dtypes : dict, optional
+        Dictionary mapping column names to expected dtype strings.
+        Example: {'age': 'int64', 'name': 'object'}
+    required_columns : list, optional
+        List of column names that must be present.
+    
+    Returns
+    -------
+    dict
+        Validation results with keys:
+        - 'is_valid': bool, True if all checks pass
+        - 'missing_columns': list of missing required columns
+        - 'dtype_mismatches': dict of {column: {'expected': x, 'actual': y}}
+        - 'extra_columns': list of columns not in expected_dtypes (if provided)
+    
+    Examples
+    --------
+    >>> df = pd.DataFrame({'a': [1, 2], 'b': ['x', 'y']})
+    >>> validate_schema(df, required_columns=['a', 'b', 'c'])
+    {'is_valid': False, 'missing_columns': ['c'], ...}
+    """
+    result = {
+        'is_valid': True,
+        'missing_columns': [],
+        'dtype_mismatches': {},
+        'extra_columns': []
+    }
+    
+    # Check required columns
+    if required_columns is not None:
+        missing = [col for col in required_columns if col not in df.columns]
+        result['missing_columns'] = missing
+        if missing:
+            result['is_valid'] = False
+    
+    # Check dtype mismatches
+    if expected_dtypes is not None:
+        for col, expected_dtype in expected_dtypes.items():
+            if col in df.columns:
+                actual_dtype = str(df[col].dtype)
+                # Allow flexible matching (e.g., 'int64' matches 'int')
+                if not (expected_dtype in actual_dtype or actual_dtype in expected_dtype):
+                    result['dtype_mismatches'][col] = {
+                        'expected': expected_dtype,
+                        'actual': actual_dtype
+                    }
+                    result['is_valid'] = False
+        
+        # Identify extra columns not in expected schema
+        expected_cols = set(expected_dtypes.keys())
+        actual_cols = set(df.columns)
+        result['extra_columns'] = list(actual_cols - expected_cols)
+    
+    return result
+
+
+def duplicate_summary(df, subset=None):
+    """
+    Summarize duplicate rows in a DataFrame.
+    
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The DataFrame to analyze.
+    subset : list, optional
+        Column names to consider for duplicate detection.
+        If None, all columns are used.
+    
+    Returns
+    -------
+    dict
+        Summary with keys:
+        - 'total_duplicates': int, count of duplicate rows
+        - 'duplicate_percentage': float, percentage of duplicates
+        - 'total_rows': int, total number of rows
+        - 'unique_rows': int, number of unique rows
+        - 'by_subset': dict (only if subset provided), duplicates per subset column
+    
+    Examples
+    --------
+    >>> df = pd.DataFrame({'a': [1, 1, 2], 'b': [1, 1, 2]})
+    >>> duplicate_summary(df)
+    {'total_duplicates': 1, 'duplicate_percentage': 33.33, ...}
+    """
+    total_rows = len(df)
+    
+    if total_rows == 0:
+        return {
+            'total_duplicates': 0,
+            'duplicate_percentage': 0.0,
+            'total_rows': 0,
+            'unique_rows': 0
+        }
+    
+    duplicates = df.duplicated(subset=subset)
+    total_duplicates = duplicates.sum()
+    
+    result = {
+        'total_duplicates': int(total_duplicates),
+        'duplicate_percentage': round(total_duplicates / total_rows * 100, 2),
+        'total_rows': total_rows,
+        'unique_rows': total_rows - int(total_duplicates)
+    }
+    
+    # If subset is provided, also show duplicates per column in subset
+    if subset is not None:
+        by_subset = {}
+        for col in subset:
+            if col in df.columns:
+                col_duplicates = df.duplicated(subset=[col]).sum()
+                by_subset[col] = int(col_duplicates)
+        result['by_subset'] = by_subset
+    
+    return result
+
+
+def basic_profile(df):
+    """
+    Generate a basic profile summary of a DataFrame.
+    
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The DataFrame to profile.
+    
+    Returns
+    -------
+    dict
+        Profile with keys:
+        - 'rows': int, number of rows
+        - 'cols': int, number of columns  
+        - 'dtypes': dict, count of each dtype
+        - 'memory_usage_mb': float, memory usage in MB
+        - 'missing_cells': int, total missing values
+        - 'missing_percentage': float, overall missing percentage
+        - 'numeric_summary': dict, describe() output for numeric columns
+    
+    Examples
+    --------
+    >>> df = pd.DataFrame({'a': [1, 2, 3], 'b': ['x', 'y', 'z']})
+    >>> profile = basic_profile(df)
+    >>> profile['rows']
+    3
+    """
+    rows, cols = df.shape
+    total_cells = rows * cols
+    missing_cells = df.isnull().sum().sum()
+    
+    # Get dtype counts
+    dtype_counts = df.dtypes.value_counts()
+    dtypes = {str(k): int(v) for k, v in dtype_counts.items()}
+    
+    # Numeric summary
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
+    if len(numeric_cols) > 0:
+        numeric_summary = df[numeric_cols].describe().to_dict()
+    else:
+        numeric_summary = {}
+    
+    result = {
+        'rows': rows,
+        'cols': cols,
+        'dtypes': dtypes,
+        'memory_usage_mb': round(df.memory_usage(deep=True).sum() / (1024 ** 2), 4),
+        'missing_cells': int(missing_cells),
+        'missing_percentage': round(missing_cells / total_cells * 100, 2) if total_cells > 0 else 0.0,
+        'numeric_summary': numeric_summary
+    }
+    
+    return result

@@ -1,12 +1,126 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import cross_val_score, learning_curve, validation_curve
+from sklearn.model_selection import StratifiedKFold, KFold, cross_val_predict
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.metrics import roc_auc_score, average_precision_score
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 import warnings
+
+
+def cross_validate_with_metrics(model, X, y, cv=5, task="classification", 
+                                 stratified=True, return_proba_metrics=True):
+    """
+    Perform cross-validation and return comprehensive metric summaries.
+    
+    Parameters
+    ----------
+    model : estimator
+        A scikit-learn compatible estimator.
+    X : array-like of shape (n_samples, n_features)
+        Training data.
+    y : array-like of shape (n_samples,)
+        Target values.
+    cv : int, default=5
+        Number of cross-validation folds.
+    task : str, default="classification"
+        Either "classification" or "regression".
+    stratified : bool, default=True
+        Use stratified k-fold for classification (preserves class distribution).
+    return_proba_metrics : bool, default=True
+        If True and model supports predict_proba, compute ROC-AUC and PR-AUC.
+    
+    Returns
+    -------
+    dict
+        Dictionary with metric summaries:
+        - For classification: accuracy, f1, precision, recall (mean & std)
+        - For regression: r2, mae, rmse (mean & std)
+        - Optional: roc_auc, pr_auc for binary classification
+    
+    Examples
+    --------
+    >>> from sklearn.ensemble import RandomForestClassifier
+    >>> from sklearn.datasets import make_classification
+    >>> X, y = make_classification(n_samples=100, random_state=42)
+    >>> model = RandomForestClassifier(random_state=42)
+    >>> results = cross_validate_with_metrics(model, X, y)
+    >>> print(results['accuracy_mean'])
+    """
+    # Input validation
+    if task not in ["classification", "regression"]:
+        raise ValueError("task must be 'classification' or 'regression'")
+    
+    # Set up cross-validation splitter
+    if task == "classification" and stratified:
+        cv_splitter = StratifiedKFold(n_splits=cv, shuffle=True, random_state=42)
+    else:
+        cv_splitter = KFold(n_splits=cv, shuffle=True, random_state=42)
+    
+    results = {}
+    
+    if task == "classification":
+        # Classification metrics
+        metrics = {
+            'accuracy': 'accuracy',
+            'f1': 'f1_weighted',
+            'precision': 'precision_weighted',
+            'recall': 'recall_weighted'
+        }
+        
+        for metric_name, scoring in metrics.items():
+            try:
+                scores = cross_val_score(model, X, y, cv=cv_splitter, scoring=scoring)
+                results[f'{metric_name}_mean'] = float(np.mean(scores))
+                results[f'{metric_name}_std'] = float(np.std(scores))
+                results[f'{metric_name}_scores'] = scores.tolist()
+            except Exception as e:
+                results[f'{metric_name}_error'] = str(e)
+        
+        # Probability-based metrics (ROC-AUC, PR-AUC)
+        if return_proba_metrics and hasattr(model, 'predict_proba'):
+            try:
+                # Check if binary classification
+                n_classes = len(np.unique(y))
+                if n_classes == 2:
+                    roc_scores = cross_val_score(model, X, y, cv=cv_splitter, scoring='roc_auc')
+                    results['roc_auc_mean'] = float(np.mean(roc_scores))
+                    results['roc_auc_std'] = float(np.std(roc_scores))
+                    
+                    pr_scores = cross_val_score(model, X, y, cv=cv_splitter, scoring='average_precision')
+                    results['pr_auc_mean'] = float(np.mean(pr_scores))
+                    results['pr_auc_std'] = float(np.std(pr_scores))
+                else:
+                    # Multiclass: use OVR ROC-AUC
+                    roc_scores = cross_val_score(model, X, y, cv=cv_splitter, 
+                                                  scoring='roc_auc_ovr_weighted')
+                    results['roc_auc_mean'] = float(np.mean(roc_scores))
+                    results['roc_auc_std'] = float(np.std(roc_scores))
+            except Exception as e:
+                results['proba_metrics_error'] = str(e)
+    
+    else:
+        # Regression metrics
+        r2_scores = cross_val_score(model, X, y, cv=cv_splitter, scoring='r2')
+        results['r2_mean'] = float(np.mean(r2_scores))
+        results['r2_std'] = float(np.std(r2_scores))
+        results['r2_scores'] = r2_scores.tolist()
+        
+        mae_scores = cross_val_score(model, X, y, cv=cv_splitter, scoring='neg_mean_absolute_error')
+        results['mae_mean'] = float(-np.mean(mae_scores))  # Negate to get actual MAE
+        results['mae_std'] = float(np.std(mae_scores))
+        
+        rmse_scores = cross_val_score(model, X, y, cv=cv_splitter, scoring='neg_root_mean_squared_error')
+        results['rmse_mean'] = float(-np.mean(rmse_scores))  # Negate to get actual RMSE
+        results['rmse_std'] = float(np.std(rmse_scores))
+    
+    results['cv_folds'] = cv
+    results['task'] = task
+    
+    return results
 
 class ModelValidator:
     """
