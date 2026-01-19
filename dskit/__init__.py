@@ -1,6 +1,12 @@
 from .core import dskit
 from .io import load, read_folder, save
 from .cleaning import fix_dtypes, rename_columns_auto, replace_specials, missing_summary, fill_missing, outlier_summary, remove_outliers, simple_nlp_clean
+
+# Custom exceptions
+from .exceptions import (
+    DskitError, ModelNotFoundError, ModelNotTrainedError, 
+    InvalidParameterError, DependencyError, DataValidationError, ColumnNotFoundError
+)
 from .visualization import plot_missingness, plot_histograms, plot_boxplots, plot_correlation_heatmap, plot_pairplot
 from .preprocessing import auto_encode, auto_scale, train_test_auto
 from .modeling import QuickModel, compare_models, auto_hpo, evaluate_model, error_analysis
