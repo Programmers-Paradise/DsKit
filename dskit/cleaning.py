@@ -113,6 +113,8 @@ def outlier_summary(df, method='iqr', threshold=1.5):
         elif method == 'zscore':
             mean = df[col].mean()
             std = df[col].std()
+            if std == 0:
+                continue
             z_scores = (df[col] - mean) / std
             outliers = df[np.abs(z_scores) > 3]
         
@@ -139,6 +141,8 @@ def remove_outliers(df, method='iqr', threshold=1.5):
         elif method == 'zscore':
             mean = df[col].mean()
             std = df[col].std()
+            if std==0:
+                continue
             z_scores = (df[col] - mean) / std
             df = df[np.abs(z_scores) <= 3]
             
