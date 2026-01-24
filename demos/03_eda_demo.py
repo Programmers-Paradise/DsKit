@@ -84,9 +84,19 @@ def demo_health_check():
     report = data_health_check(df)
     
     print("\n✓ Health Check Report:")
-    print(f"  Missing Values: {report.get('missing_values', {})}")
-    print(f"  Data Types: {report.get('dtypes', {})}")
-    print(f"  Shape: {report.get('shape', {})}")
+
+    # --- FIX START: Logic Bug Prevention ---
+    # The data_health_check function might return a float (score) instead of a dictionary.
+    # We check the type before trying to access keys to prevent an AttributeError.
+    if isinstance(report, dict):
+        print(f"  Missing Values: {report.get('missing_values', {})}")
+        print(f"  Data Types: {report.get('dtypes', {})}")
+        print(f"  Shape: {report.get('shape', {})}")
+    else:
+        # Fallback if it returns a score (float/int)
+        print(f"  Overall Health Score: {report}")
+        print("  (Detailed dictionary report was not returned by the function)")
+    # --- FIX END ---
 
 
 def demo_feature_analysis():
@@ -94,9 +104,9 @@ def demo_feature_analysis():
     print("\n" + "=" * 60)
     print("DEMO 5: Feature Analysis Report")
     print("=" * 60)
-    
+
     df = create_sample_data()
-    
+
     print("\n📊 Generating feature analysis report...")
     try:
         report = feature_analysis_report(df, target_col='performance')
@@ -110,13 +120,13 @@ if __name__ == "__main__":
     print("\n" + "📊" * 30)
     print("EXPLORATORY DATA ANALYSIS DEMO".center(60))
     print("📊" * 30 + "\n")
-    
+
     demo_basic_stats()
     demo_quick_eda()
     demo_comprehensive_eda()
     demo_health_check()
     demo_feature_analysis()
-    
+
     print("\n" + "✅" * 30)
     print("ALL DEMOS COMPLETED".center(60))
     print("✅" * 30 + "\n")
