@@ -241,6 +241,7 @@ experiments/
 
 # Test and demo files
 test_*.py
+!tests/test_nlp_utils.py
 # *_demo.py
 sample_script.py
 working_demo.py
@@ -325,3 +326,5 @@ BUGFIX_SUMMARY_v1.0.4.md
 READY_TO_PUBLISH.md
 setup.py
 .setup.py
+!tests/*.py
+
