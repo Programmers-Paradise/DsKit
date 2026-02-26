@@ -181,3 +181,138 @@ def threshold_tuning(y_true, y_proba, metric="f1"):
         'metric': metric,
         'all_results': all_results
     }
+
+
+def detect_imbalance(
+    data,
+    target,
+    threshold: float = 0.3,
+    visualize: bool = True,
+    recommend: bool = True
+) -> dict:
+    """
+    Detect and analyze class imbalance in classification data.
+
+    Parameters
+    ----------
+    data : DataFrame or array-like
+        Dataset containing features and target (or ignored if `target` is an array).
+    target : str or array-like
+        Target column name (if data is DataFrame) or target array.
+    threshold : float, default=0.3
+        Imbalance threshold (e.g., 0.3 means 30:70 split triggers warning).
+    visualize : bool, default=True
+        Generate visualization of class distribution.
+    recommend : bool, default=True
+        Provide handling strategy recommendations.
+
+    Returns
+    -------
+    dict
+        Contains `is_imbalanced`, `severity`, `class_distribution`, `imbalance_ratio`,
+        `proportions`, and `recommendations`.
+    """
+    # Resolve target array/series
+    if isinstance(data, pd.DataFrame) and isinstance(target, str):
+        y = data[target]
+    else:
+        # If target is provided as an array-like, use it; otherwise assume `data` is the target
+        if isinstance(target, (pd.Series, np.ndarray, list)):
+            y = pd.Series(target)
+        else:
+            y = pd.Series(data)
+
+    y = y.dropna()
+
+    counts = y.value_counts()
+    total = counts.sum()
+    props = (counts / total)
+
+    # Basic imbalance metrics
+    majority_count = int(counts.max())
+    minority_count = int(counts.min())
+    imbalance_ratio = float(majority_count / minority_count) if minority_count > 0 else float('inf')
+
+    max_prop = float(props.max())
+    min_prop = float(props.min())
+
+    # Severity: difference between largest and smallest class proportions (0-1)
+    severity = float(max_prop - min_prop)
+
+    # Determine if imbalanced based on threshold
+    is_imbalanced = (min_prop < threshold) or (max_prop > (1.0 - threshold))
+
+    # Recommendations based on severity
+    recommendations = []
+    if recommend:
+        if severity < 0.1:
+            recommendations = [
+                'Data appears balanced; no resampling required',
+                'Consider stratified cross-validation to preserve distributions'
+            ]
+        elif severity < 0.3:
+            recommendations = [
+                'Use class weights in model training',
+                'Consider threshold tuning or calibration',
+                'Monitor minority-class metrics (precision/recall/f1)'
+            ]
+        elif severity < 0.6:
+            recommendations = [
+                'Use SMOTE (oversampling) for the minority class',
+                'Combine oversampling with class weights',
+                'Consider undersampling the majority class or ensemble methods'
+            ]
+        else:
+            recommendations = [
+                'Severe imbalance: use SMOTE or advanced oversampling techniques',
+                'Collect more minority-class data if possible',
+                'Combine resampling with class weights and careful validation',
+                'Consider reframing as anomaly detection if appropriate'
+            ]
+
+    # Visualization
+    if visualize:
+        try:
+            import matplotlib.pyplot as plt
+            try:
+                import seaborn as sns
+                sns.set_style('whitegrid')
+            except Exception:
+                pass
+
+            fig, ax = plt.subplots()
+            # Color coding: green=balanced, orange=moderate, red=severe
+            if severity < 0.3:
+                bar_color = 'green'
+            elif severity < 0.6:
+                bar_color = 'orange'
+            else:
+                bar_color = 'red'
+
+            labels = [str(x) for x in counts.index]
+            values = counts.values
+
+            # Use a single color for bars to indicate overall severity
+            ax.bar(labels, values, color=[bar_color] * len(labels))
+            ax.set_xlabel('Class')
+            ax.set_ylabel('Count')
+            ax.set_title(f'Class distribution (severity={severity:.2f})')
+
+            # Annotate percentages
+            for i, v in enumerate(values):
+                pct = props.iloc[i] * 100
+                ax.text(i, v + total * 0.01, f"{pct:.1f}%", ha='center')
+
+            plt.tight_layout()
+            plt.show()
+        except Exception as e:
+            print(f"Visualization skipped or failed: {e}")
+
+    return {
+        'is_imbalanced': bool(is_imbalanced),
+        'severity': round(float(severity), 3),
+        'class_distribution': counts.to_dict(),
+        'imbalance_ratio': float(imbalance_ratio) if np.isfinite(imbalance_ratio) else imbalance_ratio,
+        'proportions': {str(k): float(v) for k, v in props.items()},
+        'recommendations': recommendations
+    }
